@@ -50,25 +50,52 @@ def decrement_acount(acount, value):
     return acount - value
 
 
-def start_account():
-    # баланс счета
+def load_value(filename, def_value=0):
     try:
-        # пытаемся загрузить баланс счета
-        with open('account.data', 'r') as f:
-            acount = int(f.readline())
+        # пытаемся загрузить
+        with open(filename, 'r') as f:
+            value = int(f.readline())
     except:
-        # ошибка чтения файла, обнуляем значение
-        acount = 0
-        # print('Файл несуществует: счет создан')
+        # ошибка чтения файла, берем по умолчанию
+        value = def_value
+    return value
 
-    # список покупок
+
+def save_value(filename, value):
     try:
-        # пытаемся загрузить список покупок
-        with open('purchases.data', 'r') as f:
-            purchases = json.load(f)
+        # сохраним значение в файл
+        with open(filename, 'w') as f:
+            f.write(f'{str(value)}\n')
     except:
-        # ошибка чтения файла, обнуляем значение
-        purchases = {}
+        pass
+
+
+def load_dict(filename, def_dict={}):
+    try:
+        # пытаемся загрузить словарь
+        with open(filename, 'r') as f:
+            value = json.load(f)
+    except:
+        # ошибка чтения файла, берем по умолчанию
+        value = def_dict
+    return value
+
+
+def save_dict(filename, value):
+    try:
+        # сохраним словарь в файл
+        with open(filename, 'w') as f:
+            json.dump(value, f)
+    except:
+        pass
+
+
+def start_account():
+    # загрузить баланс счета
+    acount = load_value('account.data', 0)
+
+    # загрузить список покупок
+    purchases = load_dict('purchases.data', {})
 
     while True:
         print(f'На Вашем счете {acount}')
@@ -95,22 +122,11 @@ def start_account():
             for k, v in purchases.items():
                 print(f'{k} - {v}')
         elif choice == '4':
-            # баланс счета
-            try:
-                # сохраним значение счета в файл
-                with open('account.data', 'w') as f:
-                    f.write(f'{str(acount)}\n')
-            except:
-                pass
+            # сохранить баланс счета
+            save_value('account.data', acount)
 
             # список покупок
-            try:
-                # сохраним список в файл
-                with open('purchases.data', 'w') as f:
-                    json.dump(purchases, f)
-            except:
-                pass
-                print('Ошибка записи списка покупок')
+            save_dict('purchases.data', purchases)
 
             # прервать выполнение
             break
