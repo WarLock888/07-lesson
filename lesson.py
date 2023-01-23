@@ -26,6 +26,15 @@ def show_files(current_dir):
     return filelist
 
 
+def save_lines(filename, value):
+    try:
+        with open(filename, 'w') as f:
+            # запись списка
+            f.writelines(value)
+    except:
+        pass
+
+
 def main():
     print('Wellcome to console FileManager!')
     # print(os.getcwd())
@@ -68,23 +77,14 @@ def main():
             oslist = os.listdir(os.getcwd())
             print(oslist)
         elif choice == '5':  # сохранить содержимое рабочей директории в файл
-            try:
-                with open('listdir.txt', 'w') as f:
-                    # формируем список файлов для записи
-                    filelist = show_files(os.getcwd())
-                    filelist = f'files: {", ".join(filelist)}'
-
-                    # формируем список файлов для записи
-                    dirlist = show_dirs(os.getcwd())
-                    dirlist = f'dirs: {", ".join(dirlist)}'
-
-                    # запись списков в файл
-                    f.write(f'{filelist}\n')
-                    f.write(f'{dirlist}\n')
-                    # print(filelist)
-                    # print(dirlist)
-            except:
-                pass
+            # формируем список файлов
+            filelist = show_files(os.getcwd())
+            filelist = f'files: {", ".join(filelist)}'
+            # формируем список директорий
+            dirlist = show_dirs(os.getcwd())
+            dirlist = f'dirs: {", ".join(dirlist)}'
+            # запись в файл списков
+            save_lines('listdir.txt', [f'{filelist}\n', f'{dirlist}\n'])
         elif choice == '6':  # посмотреть только папки
             dirlist = show_dirs(os.getcwd())
             print(dirlist)
