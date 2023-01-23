@@ -33,6 +33,8 @@
 Для реализации основного меню можно использовать пример ниже или написать свой
 """
 
+import json
+
 
 def add_item(purchases, item, expenses):
     purchases = dict(purchases)  # create new object
@@ -49,8 +51,24 @@ def decrement_acount(acount, value):
 
 
 def start_account():
-    acount = 0
-    purchases = {}
+    # баланс счета
+    try:
+        # пытаемся загрузить баланс счета
+        with open('account.data', 'r') as f:
+            acount = int(f.readline())
+    except:
+        # ошибка чтения файла, обнуляем значение
+        acount = 0
+        # print('Файл несуществует: счет создан')
+
+    # список покупок
+    try:
+        # пытаемся загрузить список покупок
+        with open('purchases.data', 'r') as f:
+            purchases = json.load(f)
+    except:
+        # ошибка чтения файла, обнуляем значение
+        purchases = {}
 
     while True:
         print(f'На Вашем счете {acount}')
@@ -69,7 +87,7 @@ def start_account():
                 print('Не достаточно средств')
             else:
                 item = input('Что покупаем?: ')
-                purchasess = add_item(purchases, item, expenses)
+                purchases = add_item(purchases, item, expenses)
                 acount = decrement_acount(acount, expenses)
         elif choice == '3':
             print()
@@ -77,6 +95,24 @@ def start_account():
             for k, v in purchases.items():
                 print(f'{k} - {v}')
         elif choice == '4':
+            # баланс счета
+            try:
+                # сохраним значение счета в файл
+                with open('account.data', 'w') as f:
+                    f.write(f'{str(acount)}\n')
+            except:
+                pass
+
+            # список покупок
+            try:
+                # сохраним список в файл
+                with open('purchases.data', 'w') as f:
+                    json.dump(purchases, f)
+            except:
+                pass
+                print('Ошибка записи списка покупок')
+
+            # прервать выполнение
             break
         else:
             print('Неверный пункт меню')

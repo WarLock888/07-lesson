@@ -1,0 +1,2 @@
+files: test_file_name2, purchases.data, account.py, test_python.py, README.md, lesson.py, test_file_name1, victory.py, listdir.txt, test_dirty_functions.py, account.data, LICENSE, test_filemanager.py, .gitignore
+dirs: .git, __pycache__, .idea
